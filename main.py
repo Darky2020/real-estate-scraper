@@ -43,9 +43,23 @@ async def parse():
                 if price < MIN_PRICE:
                     continue
 
-                distance = haversine_distance(BASE_LAT, BASE_LNG, obj_lat, obj_lng)
-                
-                if distance > MAX_DISTANCE:
+                distance_continue = False
+                _name = ""
+
+                for point in points:
+                    distance = haversine_distance(
+                        point["lat"], point["lng"],
+                        obj_lat, obj_lng
+                    )
+
+                    if distance < point["dist"]:
+                        distance_continue = False
+                        _name = point["name"]
+                        break
+
+                    distance_continue = True
+
+                if distance_continue:
                     continue
 
                 last_id = obj_id
@@ -53,6 +67,7 @@ async def parse():
                 message = ""
 
                 message += f"Ціна: {price} грн\n"
+                message += f"Район: {_name}\n"
                 message += ""
                 message += obj_url
 
@@ -64,7 +79,7 @@ def init_scheduler():
         daemon=True, timezone="Europe/Berlin", misfire_grace_time=None
     )
 
-    scheduler.add_job(parse, "interval", seconds=10)
+    scheduler.add_job(parse, "interval", minutes=1)
     scheduler.start()
 
     try:

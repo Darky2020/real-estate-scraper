@@ -1,9 +1,14 @@
 ENDPOINT = "https://www.real-estate.lviv.ua/<settings>"
 
 # Coordinates
-BASE_LAT = 10
-BASE_LNG = 20
-MAX_DISTANCE = 1.75 # km
+points = [
+    {
+        "lat": 12,
+        "lng": 34,
+        "dist": 1.5, # km,
+        "name": "Place 1"
+    }
+]
 
 MIN_PRICE = 4000 # UAH
 
